@@ -2,7 +2,7 @@
 
 
 ## Project Description
-This end-to-end machine-learning project builds a classifier to predict which NBA player will win the Most Valuable Player (MVP) award in a given season. We combine historical data from 2004/05 through 2023/24—player box-score stats, advanced metrics, and team win percentages—to train and evaluate our models.
+This end-to-end machine-learning project builds a classifier to predict which NBA player will win the Most Valuable Player (MVP) award in a given season. We combine historical data from 2004/05 through 2023/24 to train and evaluate our models.
 
 ---
 
