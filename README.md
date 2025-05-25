@@ -1,6 +1,5 @@
 # NBA MVP Prediction – End-to-End Machine Learning
 
-
 ## Project Description
 This end-to-end machine-learning project builds a classifier to predict which NBA player will win the Most Valuable Player (MVP) award in a given season. We combine historical data from 2004/05 through 2023/24 to train and evaluate our models.
 
@@ -8,155 +7,138 @@ This end-to-end machine-learning project builds a classifier to predict which NB
 
 ## Project Highlights & Results
 
-Our final optimized Random Forest model, trained on historical data and evaluated on the latest four seasons (2020/21-2023/24), demonstrates **robust and practical performance** in NBA MVP prediction.
-
-* **Chronological Test Split:** The last 4 seasons (2020/21, 2021/22, 2022/23, 2023/24) were used as the test set to simulate a realistic prediction of future MVPs.
-* **Baseline CV F1:** 0.693 (Indicator of initial performance on the training set).
-* **Best CV F1 After Tuning:** 0.725 (Improved performance through hyperparameter optimization on the training set).
-* **Final Test F1-Score (MVP Class) @ Optimal Threshold (0.27): 0.727**
-    * **Recall (MVP Class): 1.00** – The model **correctly identified all 4 actual MVPs** in the test set.
-    * **Precision (MVP Class): 0.57** – Of all players predicted as MVP, 57% were actual MVPs (4 out of 7 predicted).
-    * **Test ROC-AUC: 0.998** – Confirms the model's excellent discriminative ability.
-
-**Confusion Matrix on the Test Set:**  
-|722|3|
-|0|4|
-
-The confusion matrix shows that the model correctly identified all 4 MVPs as True Positives (TP) and had no False Negatives (FN). The 3 False Positives (FP) are non-MVPs incorrectly classified as MVPs. This balance, of finding all MVPs, is crucial for the project's goal and demonstrates the model's high relevance.
+- **Chronological Test Split:** Last 4 seasons (2020/21–2023/24) used as test set to simulate future predictions.  
+- **Baseline CV F1:** 0.693  
+- **Best CV F1 After Tuning:** 0.725  
+- **Final Test F1-Score (MVP @ threshold 0.27):** 0.727  
+  - **Recall (MVP):** 1.00 (all 4 actual MVPs identified)  
+  - **Precision (MVP):** 0.57 (4 out of 7 predictions correct)  
+  - **ROC-AUC:** 0.998  
 
 ---
 
-| Name           | URL                                               |
-|----------------|---------------------------------------------------|
-| Huggingface Space | [Hugging Face](https://huggingface.co/spaces/ovogoeky/termproject) |
-| GitHub         | [NBA-MVP-Prediction](https://github.com/ovogoeky/nba-mvp-prediction) |
+## Links
 
-## Data Sources and Features Used Per Source
-
-For this project, relevant player, team, and MVP data were extracted and combined from various online sources.
-
-| Data Source                                       | Features Used                                                                                                               |
-|---------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------|
-| [Basketball-Reference.com](https://www.basketball-reference.com/) | MVP Awards (Player, Team, Season)                                                                                           |
-| [Stathead.com](https://www.stathead.com/)         | **Basic Player Statistics:** Points Per Game (PPG), Rebounds Per Game (RPG), Assists Per Game (APG), Win Shares (WS)        |
-| [Stathead.com](https://www.stathead.com/)         | **Advanced Player Statistics:** Offensive Rating (ORtg), Defensive Rating (DRtg), Player Efficiency Rating (PER), Box Plus/Minus (BPM), Usage Percentage (USG%), Value Over Replacement Player (VORP) |
-| [Stathead.com](https://www.stathead.com/)         | **Team Performance:** Winning Percentage (Win%)   
+| Name               | URL                                                                                      |
+|--------------------|------------------------------------------------------------------------------------------|
+| Hugging Face Space | [Hugging Face](https://huggingface.co/spaces/ovogoeky/termproject)                                        |
+| GitHub Repository  | [GitHub](https://github.com/ovogoeky/nba-mvp-prediction)                                            |
 
 ---
-## Dataset Versions Used
 
-Throughout the project, I worked with multiple versions of the dataset that reflect different stages of the ML pipeline:
+## Data Sources & Features
 
-- **`final_dataset_complete.csv`**  
-  → This dataset was created after merging the three original data sources (player stats, team win percentages, and MVP labels).
+| Data Source                                      | Features                                                                                                                |
+|--------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------|
+| [Basketball-Reference.com](https://www.basketball-reference.com/) | MVP Awards (Player, Team, Season)                                                                                       |
+| [Stathead.com](https://www.stathead.com/) – Basic      | PPG, RPG, APG, Win Shares (WS)                                                                                           |
+| [Stathead.com](https://www.stathead.com/) – Advanced   | ORtg, DRtg, PER, BPM, USG%, VORP                                                                                        |
+| [Stathead.com](https://www.stathead.com/) – Team        | Team Win%                                                                                                               |
 
-- **`final_dataset_with_outlier_flag.csv`**  
-  → This version includes the merged data **plus an outlier flag**, generated during Exploratory Data Analysis (EDA) to identify and remove extreme non-MVP entries.
+---
 
-- **`final_dataset_with_features.csv`**  
-  → This is the final dataset used for training and testing, created after performing feature engineering. It contains all selected and engineered features.
+## Dataset Versions
+
+- **final_dataset_complete.csv**  
+  Merged raw data (player stats + team Win% + MVP labels).
+
+- **final_dataset_with_outlier_flag.csv**  
+  Adds an outlier flag from EDA to remove extreme non-MVP entries.
+
+- **final_dataset_with_features.csv**  
+  Final features after engineering, used for training and testing.
 
 ---
 
 ## Feature Engineering
-## Features Created (with indication of those used in the final model)
 
-| Feature | Description | Used in Final Model |
-|---|---|:---:|
-| `Standings` | Team rank in the season by Win% (1 = best team) | Yes |
-| `Top3_Team` | Binary indicator if the team is among the top 3 in season Win% (1 = Yes, 0 = No) | No |
-| `Efficiency_score` | Weighted combination of production and team success: (PPG + RPG + APG) × Win% | Yes |
-| `PPG_weighted` | Points per game multiplied by team Win% (PPG × Win%) | No |
-| `PPG_x_Win%` | Interaction term: PPG × Win% | No |
-| `BPM_x_USG%` | Interaction term: Box Plus/Minus × Usage Rate (BPM × USG%) | No |
-| `Net_Rating` | Difference between Offensive and Defensive Rating (ORtg − DRtg) | Yes |
-| `PPG_rel` | Deviation of PPG from league average per season (PPG − Avg PPG_Season) | No |
-| `PER_rel` | Deviation of PER from league average per season (PER − Avg PER_Season) | No |
-| `WS_rel` | Ratio of Win Shares to league average (WS / Avg WS_Season) | No |
-| `WinPct_rel` | Deviation of Team Win% from league average per season (Win% − Avg Win%_Season) | No |
-| `is_outlier` | Binary flag for outliers among non-MVP players (IQR- & Z-score–based) | No |
+| Feature           | Description                                                      | Used in Final Model |
+|-------------------|------------------------------------------------------------------|:-------------------:|
+| **Standings**     | Team rank by Win% (1 = best)                                     | Yes                 |
+| Top3_Team         | 1 if team in top 3 by Win%, else 0                               | No                  |
+| **Efficiency_score** | (PPG + RPG + APG) × Win%                                      | Yes                 |
+| PPG_weighted      | PPG × Win%                                                       | No                  |
+| PPG_x_Win%        | Interaction term: PPG × Win%                                     | No                  |
+| BPM_x_USG%        | Interaction term: BPM × USG%                                     | No                  |
+| **Net_Rating**    | ORtg − DRtg                                                      | Yes                 |
+| PPG_rel           | PPG − Avg PPG_Season                                             | No                  |
+| PER_rel           | PER − Avg PER_Season                                             | No                  |
+| WS_rel            | WS / Avg WS_Season                                               | No                  |
+| WinPct_rel        | Win% − Avg Win%_Season                                           | No                  |
+| is_outlier        | Binary flag for non-MVP outliers (IQR & Z-score)                 | No                  |
 
-> **Note:** We exclude all “relative” features in the final model since our Gradio app ingests only a single-season CSV (24/25) and does not require cross-season normalization.
+> **Note:** All “_rel” features are excluded in production, since the app ingests single-season CSVs without cross-season context.
 
 ---
 
 ## Model Training & Optimization
 
-### Amount of Data
-* **Player-Seasons**: 3684 data points 
-* **MVP Cases**: 20 (1 per season from 2004/05 to 2023/24)
+- **Data Size:**  
+  - 3,684 player-seasons  
+  - 20 MVP cases (2004/05–2023/24)
 
-### Data Splitting
-1.  **Train/Test Split**: Chronological split to simulate predicting future seasons.
-    * **Training Set:** Seasons 2004/05 – 2019/20
-    * **Test Set:** Last 4 seasons (2020/21 – 2023/24) – this final test set is used only once for model evaluation.
-2.  **Hyperparameter Tuning & Model Selection**: 5-fold, stratified cross-validation on the **training set** for robust hyperparameter optimization of the Random Forest model.
-3.  **Final Evaluation**: Model evaluation on the separate, unseen test set to assess generalization ability.
+- **Splitting Strategy:**  
+  1. **Train:** 2004/05–2019/20  
+  2. **Test:** 2020/21–2023/24  
+  3. **CV:** 5-fold stratified on training set for hyperparameter tuning
 
-| Metric | Value | Description |
-|---|---|---|
-| **Test F1-Score (MVP)** | **0.727** | High balance between Precision and Recall for the MVP class. |
-| **Recall (MVP)** | **1.00** | The model **correctly identified all 4 actual MVPs** in the test set. |
-| **Precision (MVP)** | **0.57** | 57% of players predicted as MVP were correct. |
-| **Test ROC-AUC** | **0.998** | Excellent ability of the model to distinguish MVPs from non-MVPs. |
-| **Baseline CV F1** | 0.693 | Initial model performance on the training set. |
-| **Best CV F1 (after Tuning)** | 0.725 | Improved performance through hyperparameter optimization. |
+| Metric                      | Value | Description                                       |
+|-----------------------------|-------|---------------------------------------------------|
+| **Test F1-Score (MVP)**     | 0.727 | Balance of Precision & Recall                     |
+| **Recall (MVP)**            | 1.00  | All 4 MVPs correctly identified                   |
+| **Precision (MVP)**         | 0.57  | 57% of MVP predictions were correct               |
+| **Test ROC-AUC**            | 0.998 | Excellent discriminative ability                  |
+| **Baseline CV F1**          | 0.693 | Initial model performance                         |
+| **Best CV F1 (after tuning)** | 0.725 | After hyperparameter optimization                 |
+
 ---
 
 ## Deployment
 
-- **App**: `app.py` (Gradio Blocks)  
-- **Usage**:  
+- **App Script:** `app.py` (Gradio Blocks)  
+- **Dependencies:** listed in `requirements.txt`  
+- **Usage:**  
   1. Upload a CSV with columns:  
      ```
      Player, Team, PPG, RPG, APG, Win%, WS,
      ORtg, DRtg, PER, BPM, VORP
      ```  
-  2. Or click **“Mit den Daten der 24/25 Saison füllen”**  
-  3. View Top-3 MVP candidates & probabilities  
+  2. Or click “Fill with 24/25 season data”  
+  3. View top-3 MVP candidates & their probabilities  
 
+---
 
-## Visualizations and Analyses
+## Visualizations & Analyses
 
-To better understand the data, support feature selection, and interpret model performance, various visualizations were created. 
+1. **Feature Distributions** – Histograms split by MVP status  
+2. **Correlation Matrix** – Correlations between features & MVP label  
+3. **Scatter Matrix** – Pairwise plots of top features (PPG, WS, PER, BPM, VORP)  
+4. **Permutation Importance** – Top feature importances from Random Forest  
 
-### 1. Feature Distributions and MVP Separation
-![image](https://github.com/user-attachments/assets/56833893-6de4-4dc3-8103-34922625ebeb)
-These histograms with density estimates show the distribution of each numerical feature, split by MVP status (blue for Non-MVP, orange for MVP). It is clear that MVPs consistently have significantly higher values in almost all key statistics, which forms a good basis for classification.
+> See the full Jupyter Notebook for interactive plots, PCA, time-series analyses, and detailed code.
 
-### 2. Correlation Matrix
-![image](https://github.com/user-attachments/assets/3f87cb47-2fee-49c2-b261-f4dcf339fe8e)
-The correlation matrix visualizes the correlations between all numerical features and the MVP target. It shows that advanced stats such as PER, BPM, VORP, and WS, in particular, exhibit a strong positive correlation with MVP status, underscoring their importance for prediction. Win% and PPG also show relevant correlations.
+---
 
-### 3. Scatter Matrix of Selected Top Features
-![image](https://github.com/user-attachments/assets/e02676c2-c4c4-474e-a628-eeda4906e8b9)
-This scatter matrix displays the pairwise relationships between the top features (PPG, WS, PER, BPM, VORP). The red points (MVPs) are concentrated in the upper right corners of the plots, visually confirming that MVPs perform exceptionally well in these statistics and stand out from the majority of Non-MVPs.
+## Conclusion & Outlook
 
-### 4. Feature Importance of the Final Model (without relative features)
-![image](https://github.com/user-attachments/assets/9269f1cb-51cb-4770-9305-793b179e0a50)
-This bar chart illustrates the importance of the top 20 features for the Random Forest model based on Permutation Importance (ΔF1), after relative features were removed from the dataset. It highlights the dominance of features such as `WS`, `VORP`, `Efficiency_score`, and `BPM`, which are the most influential factors for MVP prediction.
+### Conclusion
+- End-to-end NBA MVP prediction pipeline implemented.  
+- Data merged from Basketball-Reference and Stathead.  
+- Key features engineered: Efficiency_score, Standings, Net_Rating, etc.  
+- Random Forest evaluated on realistic test set:  
+  - **F1-Score:** 0.727  
+  - **Recall:** 1.00  
+  - **Precision:** 0.57  
+  - **ROC-AUC:** 0.998  
 
-### Further Analyses in the Notebook
-For deeper insights into the data and modeling, including the following visualizations and analyses, please refer to the main Jupyter Notebook in the GitHub Repository:
-* **PCA (Principal Component Analysis) of the numerical features**
-* **Average PPG across seasons (MVP vs. Non-MVP)**
-* **Detailed Feature Interactions (examples)**
-* **Code for data acquisition, preprocessing, and model training**
+### Outlook
+1. **Expand the Data**  
+   - Include more seasons for robustness  
+2. **Deepen Feature Engineering**  
+   - Explore complex interactions & time-series features  
+3. **Explore Imbalance Techniques**  
+   - Apply SMOTE or specialized sampling  
+4. **Build Ensembles**  
+   - Combine multiple models for stability  
 
-## Conclusion and Outlook
-
-This end-to-end Machine Learning project has successfully developed and deployed a classification model for NBA MVP prediction. The project covered all essential steps of an ML workflow, from data acquisition from various sources like Basketball-Reference.com and Stathead.com to the deployment of the application on Huggingface.
-
-The challenge of extreme class imbalance (only one MVP per season) was addressed through the targeted use of metrics like the F1-Score and ROC-AUC. The final Random Forest model, evaluated on a realistic test set spanning the last four seasons, achieved an **F1-Score of 0.727** for the MVP class, with a **Recall of 1.00** and a Precision of 0.57. This means the model **correctly identified all four actual MVPs** in the test set – a crucial success for the objective. The high ROC-AUC value of 0.998 further underscores the model's strong intrinsic discriminative ability.
-
-Through comprehensive feature engineering, relevant features such as `Efficiency_score`, `Standings`, and `Net_Rating` were created and utilized. The Permutation Importance analysis was crucial for selecting the most important features, with `Efficiency_score`, `VORP`, `WS`, and `BPM` identified as the most influential factors.
-
-**Potential next steps and improvements could include:**
-
-* **Expanding the Data Basis:** A larger number of seasons could further strengthen the model's robustness and improve its generalization to future seasons.
-* **Further Feature Engineering:** Exploring more complex interaction terms or time-based features could uncover new patterns.
-* **Applying Advanced Techniques for Class Imbalance:** Techniques such as SMOTE or specialized sampling methods could further optimize handling of the extreme imbalance.
-* **Ensemble Methods:** Combining multiple models (ensembles) could further stabilize and improve predictive performance.
-
-Overall, this project provides a solid foundation for MVP prediction and demonstrates the practical application of Machine Learning to solve complex sports analytics problems.
-
+Overall, this project lays a solid foundation for MVP prediction and demonstrates ML’s power in sports analytics.  
