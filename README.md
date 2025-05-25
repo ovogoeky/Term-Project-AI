@@ -54,7 +54,7 @@ Throughout the project, I worked with multiple versions of the dataset that refl
   → This version includes the merged data **plus an outlier flag**, generated during Exploratory Data Analysis (EDA) to identify and remove extreme non-MVP entries.
 
 - **`final_dataset_with_features.csv`**  
-  → This is the **final dataset used for training and testing**, created after performing feature engineering. It contains all selected and engineered features and excludes flagged outliers.
+  → This is the final dataset used for training and testing, created after performing feature engineering. It contains all selected and engineered features.
 
 ---
 
