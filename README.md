@@ -42,7 +42,19 @@ For this project, relevant player, team, and MVP data were extracted and combine
 | [Stathead.com](https://www.stathead.com/)         | **Advanced Player Statistics:** Offensive Rating (ORtg), Defensive Rating (DRtg), Player Efficiency Rating (PER), Box Plus/Minus (BPM), Usage Percentage (USG%), Value Over Replacement Player (VORP) |
 | [Stathead.com](https://www.stathead.com/)         | **Team Performance:** Winning Percentage (Win%)   
 
+---
+## Dataset Versions Used
 
+Throughout the project, I worked with multiple versions of the dataset that reflect different stages of the ML pipeline:
+
+- **`final_dataset_complete.csv`**  
+  → This dataset was created after merging the three original data sources (player stats, team win percentages, and MVP labels).
+
+- **`final_dataset_with_outlier_flag.csv`**  
+  → This version includes the merged data **plus an outlier flag**, generated during Exploratory Data Analysis (EDA) to identify and remove extreme non-MVP entries.
+
+- **`final_dataset_with_features.csv`**  
+  → This is the **final dataset used for training and testing**, created after performing feature engineering. It contains all selected and engineered features and excludes flagged outliers.
 
 ---
 
